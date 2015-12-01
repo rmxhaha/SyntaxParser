@@ -1,4 +1,6 @@
 #include "stdio.h"
+#include "boolean.h"
+#include "string.h"
 
 #ifndef MESINTOKEN_H
 #define MESINTOKEN_H
@@ -10,10 +12,8 @@ typedef struct {
 	int line;
 } Token;
 
-
 void mtoken_init();
 
-Token mtoken_adv();
-
+Token mtoken_adv( FILE *, int *);
 
 #endif
