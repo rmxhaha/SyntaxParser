@@ -101,10 +101,9 @@ void ConvertState( boolean *state, char input ){
 // f:FILE*
 // idx:int*
 
-// I.S. idx awal pembacaan, f sudah di inisialisasi
-// F.S. idx akhir pembacaan
-Token mtoken_adv( FILE *f, int *idx ){
-	Token t;
+// I.S. idx awal pembacaan, f sudah di inisialisasi, t sembarangan
+// F.S. idx akhir pembacaan, t terdef
+void mtoken_adv( FILE *f, int *idx, Token *t ){
 	char c;
 	int r = 0, i;
 	int lf = -1;
@@ -114,51 +113,47 @@ Token mtoken_adv( FILE *f, int *idx ){
 	fseek( f, *idx, SEEK_SET );
 	
 	
-	printf("=======================\n");
 	while( !IsDeadState(current_state) ){
 		c = fgetc(f);
 		if( c == EOF )
 			break;
 		
 
-		t.token[r] = c;
+		t->token[r] = c;
 		ConvertState( current_state, c );
 		if( IsFinalState(current_state) ){
-			printf("FFFF !!!");
+			//printf("Final !\n");
 			lf = r;
 		}
-		
+		/*
 		printf("%d %c\n", r, c);
-		for( i = 0; i < 256; ++ i )
+		for( i = 0; i < NSTATE; ++ i )
 			if( current_state[i] )
 				printf("%c", (char)i );
 		printf("\n");
 		printf("\n");
-
+		*/
 		++r;
 		
 	}
-	printf("=======================\n");
-		
 	if( c == EOF ){
-		printf("R1\n");
+		//printf("R1\n");
 		(*idx) = -1;
+
 		if( lf == -1 ) 
-			t.token[0] = '\0';
+			t->token[0] = '\0';
 		else
-			t.token[lf+1] = '\0';
+			t->token[lf+1] = '\0';
 	}
 	else if( lf == -1 ) {
-		printf("R2\n");
+		//printf("R2\n");
 		(*idx) ++;
-		mtoken_adv(f,idx);
+		mtoken_adv(f,idx,t);
 	}
 	else{
-		printf("R3\n");
+		//printf("R3\n");
 		(*idx) += lf+1;
-		t.token[lf+1] = '\0';
+		t->token[lf+1] = '\0';
 	}
-	
-	return t;
 }
 

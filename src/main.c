@@ -10,10 +10,12 @@ int main()
 	Token t;
 	
 	
-	while( i != -1 ){
-		t = mtoken_adv(f,&i);
-		printf("Token : %s\n", t.token);
-		printf("idx : %d\n",i);
+	while( i != -1 )
+	{
+		mtoken_adv(f,&i,&t);
+		printf("%s\n",t.token);
+		//printf("Token : %s\n", t.token);
+		//printf("idx : %d\n",i);
 	}
 	
 	return 0;
