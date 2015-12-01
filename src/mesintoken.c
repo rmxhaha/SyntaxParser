@@ -198,13 +198,19 @@ void assign_token_symbol( Token *t ){
 		t->symbol = 'W';
 	}
 	else if( strcmp(t->token,"if") == 0 ){
-		t->symbol = 'F';
+		t->symbol = 'J';
 	}
 	else if( strcmp(t->token,"then") == 0 ){
+		t->symbol = 'H';
+	}
+	else if( strcmp(t->token,"for") == 0 ){
+		t->symbol = 'F';		
+	}
+	else if( strcmp(t->token,"to") == 0 ){
 		t->symbol = 'T';
 	}
 	else if( strcmp(t->token,"else") == 0 ){
-		t->symbol = 'L';
+		t->symbol = 'S';
 	}
 	else if( strcmp("<=",t->token) == 0 || strcmp("<>",t->token) == 0 || strcmp(">=",t->token) == 0 ){
 		t->symbol = 'C';

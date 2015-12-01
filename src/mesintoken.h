@@ -20,9 +20,11 @@ I Input
 O Output
 D do
 W while
-F if
-T then
-L else
+H if
+J then
+S else
+F for
+T to
 C conditional < > <= >=
 N Number
 M Comment
