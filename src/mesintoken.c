@@ -149,6 +149,7 @@ void mtoken_adv( FILE *f, int *idx, int* linecount, Token *t ){
 		else if( t->token[0] != ' ' && t->token[0] != '\t' && t->token[0] != '\n' ){
 			// not a special case
 			t->token[lf+1] = '\0';
+			assign_token_symbol(t);
 		}
 		else {
 			t->token[0] = '\0';			
@@ -168,7 +169,70 @@ void mtoken_adv( FILE *f, int *idx, int* linecount, Token *t ){
 		}
 		else {
 			t->token[lf+1] = '\0';
+			assign_token_symbol(t);
 		}
 	}
 }
 
+void assign_token_symbol( Token *t ){
+	char f,c;
+	
+	if( strlen(t->token) == 0 )
+		t->symbol = 'R';
+	else if( strcmp(t->token,"begin") == 0 ){
+		t->symbol = 'B';
+	}
+	else if( strcmp(t->token,"end") == 0 ){
+		t->symbol = 'E';
+	}
+	else if( strcmp(t->token,"input") == 0 ){
+		t->symbol = 'I';
+	}
+	else if( strcmp(t->token,"output") == 0 ){
+		t->symbol = 'O';
+	}
+	else if( strcmp(t->token,"do") == 0 ){
+		t->symbol = 'D';
+	}
+	else if( strcmp(t->token,"while") == 0 ){
+		t->symbol = 'W';
+	}
+	else if( strcmp(t->token,"if") == 0 ){
+		t->symbol = 'F';
+	}
+	else if( strcmp(t->token,"then") == 0 ){
+		t->symbol = 'T';
+	}
+	else if( strcmp(t->token,"else") == 0 ){
+		t->symbol = 'L';
+	}
+	else if( strcmp("<=",t->token) == 0 || strcmp("<>",t->token) == 0 || strcmp(">=",t->token) == 0 ){
+		t->symbol = 'C';
+	}
+	else if( '0' <= t->token[0] && t->token[0] <= '9' ){
+		t->symbol = 'N';
+	}
+	else if( t->token[0] == '{' ){
+		t->symbol = 'M';
+	}
+	else if( strlen(t->token) == 1 ){
+		c = t->token[0];
+
+		if( c == '=' )
+			t->symbol = 'Q';
+		else if( c == '+' || c == '-' || c == '*' )
+			t->symbol = 'A';
+		else if( c == '<' || c == '>')
+			t->symbol = 'C';
+		else if( c == '(' )
+			t->symbol = 'L';
+		else if( c == ')' )
+			t->symbol = 'R';
+		else 
+			t->symbol = 'V';
+	}
+	else {
+		t->symbol = 'V';
+	}
+	
+}

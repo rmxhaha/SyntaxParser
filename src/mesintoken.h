@@ -7,10 +7,12 @@
 
 
 typedef struct {
-	char id; // for later identification
+	char symbol; // for later identification
 	char token[100];
 	int line;
 } Token;
+
+void assign_token_symbol( Token *t );
 
 void mtoken_init();
 
