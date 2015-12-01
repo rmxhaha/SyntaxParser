@@ -15,6 +15,8 @@ int main()
 	{
 		mtoken_adv(f,&i,&linec,&t);
 		printf("%s %d\n",t.token,t.line);
+		if( strlen(t.token)  == 0 ) 
+			printf("Error %d\n", t.line);
 		//printf("Token : %s\n", t.token);
 		//printf("idx : %d\n",i);
 	}

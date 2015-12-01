@@ -135,9 +135,7 @@ void mtoken_adv( FILE *f, int *idx, int* linecount, Token *t ){
 		*/
 		++r;
 	}
-	
-	
-	
+
 	t->line = (*linecount);
 	
 	
@@ -145,33 +143,32 @@ void mtoken_adv( FILE *f, int *idx, int* linecount, Token *t ){
 		//printf("R1\n");
 		(*idx) = -1;
 
+		
 		if( lf == -1 ) 
 			t->token[0] = '\0';
-		else
+		else if( t->token[0] != ' ' && t->token[0] != '\t' && t->token[0] != '\n' ){
+			// not a special case
 			t->token[lf+1] = '\0';
+		}
+		else {
+			t->token[0] = '\0';			
+		}
 	}
 	else if( lf == -1 ) {
-		if( c == ' ' || c == '\t' || c == '\n' ){
-			(*idx) ++;
-			while( true ){
-				c = fgetc(f);
-				if( c == EOF )
-					break;
-				if( c == ' ' || c == '\t' )
-					(*idx) ++;
-				else
-					break;
-			}
-			if( c == '\n' ){ (*linecount) ++;}
-		}
-
-		mtoken_adv(f,idx,linecount,t);
+		t->token[0] = '\0';
+		return;
 	}
 	else{
-		if( c == '\n' ){ (*linecount) ++;}
 		//printf("R3\n");
 		(*idx) += lf+1;
-		t->token[lf+1] = '\0';
+		if( t->token[0] == ' ' || t->token[0] == '\t' || t->token[0] == '\n' ){
+			// special case
+			if( t->token[0] == '\n' ){ (*linecount) ++; (*idx) ++; }
+			mtoken_adv(f,idx,linecount,t);
+		}
+		else {
+			t->token[lf+1] = '\0';
+		}
 	}
 }
 
