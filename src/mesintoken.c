@@ -103,28 +103,28 @@ void ConvertState( boolean *state, char input ){
 
 // I.S. idx awal pembacaan, f sudah di inisialisasi, t sembarangan
 // F.S. idx akhir pembacaan, t terdef
-void mtoken_adv( FILE *f, int *idx, Token *t ){
-	char c;
+void mtoken_adv( FILE *f, int *idx, int* linecount, Token *t ){
+	char c = '\0';
 	int r = 0, i;
 	int lf = -1;
 	boolean current_state[NSTATE];
+	boolean sp = false;
 	
 	memcpy( current_state, start_state, sizeof( current_state ));
 	fseek( f, *idx, SEEK_SET );
-	
 	
 	while( !IsDeadState(current_state) ){
 		c = fgetc(f);
 		if( c == EOF )
 			break;
-		
-
+		// NFA simulation
 		t->token[r] = c;
 		ConvertState( current_state, c );
 		if( IsFinalState(current_state) ){
 			//printf("Final !\n");
 			lf = r;
 		}
+		
 		/*
 		printf("%d %c\n", r, c);
 		for( i = 0; i < NSTATE; ++ i )
@@ -134,8 +134,13 @@ void mtoken_adv( FILE *f, int *idx, Token *t ){
 		printf("\n");
 		*/
 		++r;
-		
 	}
+	
+	
+	
+	t->line = (*linecount);
+	
+	
 	if( c == EOF ){
 		//printf("R1\n");
 		(*idx) = -1;
@@ -146,11 +151,22 @@ void mtoken_adv( FILE *f, int *idx, Token *t ){
 			t->token[lf+1] = '\0';
 	}
 	else if( lf == -1 ) {
-		//printf("R2\n");
 		(*idx) ++;
-		mtoken_adv(f,idx,t);
+		while( true ){
+			c = fgetc(f);
+			if( c == EOF )
+				break;
+			if( c == ' ' || c == '\t' )
+				(*idx) ++;
+			else
+				break;
+		}
+		if( c == '\n' ){ (*linecount) ++;}
+
+		mtoken_adv(f,idx,linecount,t);
 	}
 	else{
+		if( c == '\n' ){ (*linecount) ++;}
 		//printf("R3\n");
 		(*idx) += lf+1;
 		t->token[lf+1] = '\0';

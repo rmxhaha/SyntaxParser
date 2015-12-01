@@ -14,6 +14,6 @@ typedef struct {
 
 void mtoken_init();
 
-void mtoken_adv( FILE *, int *,Token *t);
+void mtoken_adv( FILE *, int *fp, int *lc,Token *t);
 
 #endif
