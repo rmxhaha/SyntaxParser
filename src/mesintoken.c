@@ -151,17 +151,19 @@ void mtoken_adv( FILE *f, int *idx, int* linecount, Token *t ){
 			t->token[lf+1] = '\0';
 	}
 	else if( lf == -1 ) {
-		(*idx) ++;
-		while( true ){
-			c = fgetc(f);
-			if( c == EOF )
-				break;
-			if( c == ' ' || c == '\t' )
-				(*idx) ++;
-			else
-				break;
+		if( c == ' ' || c == '\t' || c == '\n' ){
+			(*idx) ++;
+			while( true ){
+				c = fgetc(f);
+				if( c == EOF )
+					break;
+				if( c == ' ' || c == '\t' )
+					(*idx) ++;
+				else
+					break;
+			}
+			if( c == '\n' ){ (*linecount) ++;}
 		}
-		if( c == '\n' ){ (*linecount) ++;}
 
 		mtoken_adv(f,idx,linecount,t);
 	}
