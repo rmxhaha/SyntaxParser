@@ -124,15 +124,18 @@ void mtoken_adv_bare( FILE *f, int *idx, int* linecount, Token *t ){
 			//printf("Final !\n");
 			lf = r;
 		}
+
 		
-		/*
+		// special case comment 
+		if( current_state['w'] && c == '\n' ){ (*linecount) ++; ++r; }
+/*
 		printf("%d %c\n", r, c);
 		for( i = 0; i < NSTATE; ++ i )
 			if( current_state[i] )
 				printf("%c", (char)i );
 		printf("\n");
 		printf("\n");
-		*/
+*/
 		++r;
 	}
 
