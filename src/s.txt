@@ -1,5 +1,7 @@
-Begin
-	input(z) {menerima masukan z berupa nilai integer}
+begin
+	input(z) {menerima 
+masukan z 
+berupa nilai integer}
 	do 
 		if (z<10) then
 		begin
