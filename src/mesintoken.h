@@ -26,39 +26,22 @@ typedef struct {
 #define mtoken_CSymbol(M)\
 	(M).CToken.symbol
 
-/*
-P Error
-B Begin
-E End
-I input
-O output
-D do
-W while
-H if
-J then
-S else
-F for
-T to
-C conditional < > <= >=
-N Number
-M Comment
-Q khusus =
-A arthimatic
-L khusus (
-R khusus )
-V variable
-*/
-
+// memasukan symbol sesuai token yang ada
 void assign_token_symbol( Token *t );
 
+// meload table transisi NFA dari file states dan transition
 void mtoken_init();
 
+// membaca token selanjutnya cara lawas
 void mtoken_adv_bare( FILE *, int *fp, int *lc,Token *t);
 
+// menisialisasi mesin token
 void mtoken_new( TokenMachineState *M, FILE* file );
 
+// membaca token selanjutnya
 void mtoken_adv( TokenMachineState *M );
 
+// mengatakan apakah token masih berlaku
 boolean mtoken_terminated( TokenMachineState M );
 
 
