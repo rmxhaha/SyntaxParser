@@ -194,14 +194,26 @@ void mainparser(TokenMachineState *M) {
     //printf("Sukses\n");
 }
 
-int main()
+int main( int argc, char *argv[] )
 {
+	if( argc == 1 ){
+		printf("please add filename into parameter\n");
+		printf("e.g. %s input.txt\n", argv[0]);
+		return 0;
+	}
+
+	
 	mtoken_init();
-	FILE *f = fopen("s.txt","r");
+	FILE *f = fopen(argv[1],"r");
+	
+	if( f == NULL ){
+		printf("File cannot be opened\n");
+		return 0;
+	}
 
 	TokenMachineState M;
 	mtoken_new( &M, f );
-
+/*
 	while( !mtoken_terminated(M) ){
 		mtoken_adv(&M);
 		printf("%s %c %d\n",M.CToken.token,M.CToken.symbol,M.CToken.line);
@@ -209,7 +221,7 @@ int main()
 			printf("Error %d\n", M.CToken.line);
 	}
 	return 0;
-	
+	*/
     mainparser(&M);
 
     if (!fail) {
