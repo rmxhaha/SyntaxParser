@@ -9,7 +9,6 @@ int main()
 	int i = 0;
 	int linec = 1;
 	Token t;
-	TokenMachineState M;
 	
 	/*
 	while( i != -1 )
@@ -23,6 +22,7 @@ int main()
 	}
 	*/
 	
+	TokenMachineState M;
 	mtoken_new( &M, f );
 		
 	while( !mtoken_terminated(M) ){

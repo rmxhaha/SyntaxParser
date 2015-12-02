@@ -143,14 +143,15 @@ void mtoken_adv_bare( FILE *f, int *idx, int* linecount, Token *t ){
 		(*idx) = -1;
 
 		
-		if( lf == -1 ) 
+		if( lf == -1 ) {
 			t->token[0] = '\0';
+		}
 		else if( t->token[0] != ' ' && t->token[0] != '\t' && t->token[0] != '\n' ){
 			// not a special case
 			t->token[lf+1] = '\0';
 		}
 		else {
-			t->token[0] = '\0';			
+			t->token[0] = '\0';
 		}
 	}
 	else if( lf == -1 ){
@@ -158,7 +159,9 @@ void mtoken_adv_bare( FILE *f, int *idx, int* linecount, Token *t ){
 	}
 	else{
 		(*idx) += lf+1;
-		if( t->token[0] == ' ' || t->token[0] == '\t' || t->token[0] == '\n' ){
+		
+		// ignore white spaces and comments
+		if( t->token[0] == ' ' || t->token[0] == '\t' || t->token[0] == '\n' || t->token[0] == '{' ){
 			// special case
 			if( t->token[0] == '\n' ){ (*linecount) ++; (*idx) ++; }	
 
