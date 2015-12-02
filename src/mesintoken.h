@@ -27,7 +27,7 @@ typedef struct {
 	(M).CToken.symbol
 
 /*
-R Error
+P Error
 B Begin
 E End
 I input

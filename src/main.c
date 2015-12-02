@@ -28,7 +28,7 @@ int main()
 	while( !mtoken_terminated(M) ){
 		mtoken_adv(&M);
 		printf("%s %c %d\n",M.CToken.token,M.CToken.symbol,M.CToken.line);
-		if( mtoken_CSymbol(M) == 'R' ) 
+		if( M.CToken.symbol == 'P' ) 
 			printf("Error %d\n", M.CToken.line);
 	}
 	

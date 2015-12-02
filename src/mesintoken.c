@@ -153,14 +153,15 @@ void mtoken_adv_bare( FILE *f, int *idx, int* linecount, Token *t ){
 			t->token[0] = '\0';			
 		}
 	}
-	else if( lf == -1 ) {
+	else if( lf == -1 ){
 		t->token[0] = '\0';
 	}
 	else{
 		(*idx) += lf+1;
 		if( t->token[0] == ' ' || t->token[0] == '\t' || t->token[0] == '\n' ){
 			// special case
-			if( t->token[0] == '\n' ){ (*linecount) ++; (*idx) ++; }
+			if( t->token[0] == '\n' ){ (*linecount) ++; (*idx) ++; }	
+
 			mtoken_adv_bare(f,idx,linecount,t);
 			return; // don't assign_token_symbol
 		}
@@ -168,15 +169,15 @@ void mtoken_adv_bare( FILE *f, int *idx, int* linecount, Token *t ){
 			t->token[lf+1] = '\0';
 		}
 	}
-	
+		
 	assign_token_symbol(t);
 }
 
 void assign_token_symbol( Token *t ){
 	char f,c;
 	
-	if( strlen(t->token) == 0 )
-		t->symbol = 'R';
+	if( t->token[0] == '\0' )
+		t->symbol = 'P';
 	else if( strcmp(t->token,"begin") == 0 ){
 		t->symbol = 'B';
 	}
@@ -259,10 +260,13 @@ void mtoken_adv( TokenMachineState *M ){
 	if( M->idx != -1 ){
 		mtoken_adv_bare(M->f,&M->idx,&M->linecount,&M->NToken);
 	}
+	else {
+		M->NToken.symbol = 'P';
+	}
 }
 
 boolean mtoken_terminated( TokenMachineState M ){
-	if( M.idx == -1 && M.NToken.symbol == 'R' )
+	if( M.idx == -1 && M.NToken.symbol == 'P' )
 		return true;
 	else
 		return false;
