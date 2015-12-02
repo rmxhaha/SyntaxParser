@@ -103,7 +103,7 @@ void ConvertState( boolean *state, char input ){
 
 // I.S. idx awal pembacaan, f sudah di inisialisasi, t sembarangan
 // F.S. idx akhir pembacaan, t terdef
-void mtoken_adv( FILE *f, int *idx, int* linecount, Token *t ){
+void mtoken_adv_bare( FILE *f, int *idx, int* linecount, Token *t ){
 	char c = '\0';
 	int r = 0, i;
 	int lf = -1;
@@ -140,7 +140,6 @@ void mtoken_adv( FILE *f, int *idx, int* linecount, Token *t ){
 	
 	
 	if( c == EOF ){
-		//printf("R1\n");
 		(*idx) = -1;
 
 		
@@ -149,7 +148,6 @@ void mtoken_adv( FILE *f, int *idx, int* linecount, Token *t ){
 		else if( t->token[0] != ' ' && t->token[0] != '\t' && t->token[0] != '\n' ){
 			// not a special case
 			t->token[lf+1] = '\0';
-			assign_token_symbol(t);
 		}
 		else {
 			t->token[0] = '\0';			
@@ -157,21 +155,21 @@ void mtoken_adv( FILE *f, int *idx, int* linecount, Token *t ){
 	}
 	else if( lf == -1 ) {
 		t->token[0] = '\0';
-		return;
 	}
 	else{
-		//printf("R3\n");
 		(*idx) += lf+1;
 		if( t->token[0] == ' ' || t->token[0] == '\t' || t->token[0] == '\n' ){
 			// special case
 			if( t->token[0] == '\n' ){ (*linecount) ++; (*idx) ++; }
-			mtoken_adv(f,idx,linecount,t);
+			mtoken_adv_bare(f,idx,linecount,t);
+			return; // don't assign_token_symbol
 		}
 		else {
 			t->token[lf+1] = '\0';
-			assign_token_symbol(t);
 		}
 	}
+	
+	assign_token_symbol(t);
 }
 
 void assign_token_symbol( Token *t ){
@@ -241,4 +239,31 @@ void assign_token_symbol( Token *t ){
 		t->symbol = 'V';
 	}
 	
+}
+
+
+void mtoken_new( TokenMachineState *M, FILE* f ){
+	assert( f != 0 );
+	M->f = f;
+	M->idx = 0;
+	M->linecount = 1;
+
+	mtoken_adv_bare(M->f,&M->idx,&M->linecount,&M->NToken);
+}
+
+void mtoken_adv( TokenMachineState *M ){
+	assert( !mtoken_terminated(*M) );
+	// CToken is NToken
+	memcpy(&M->CToken,&M->NToken, sizeof(Token));
+
+	if( M->idx != -1 ){
+		mtoken_adv_bare(M->f,&M->idx,&M->linecount,&M->NToken);
+	}
+}
+
+boolean mtoken_terminated( TokenMachineState M ){
+	if( M.idx == -1 && M.NToken.symbol == 'R' )
+		return true;
+	else
+		return false;
 }

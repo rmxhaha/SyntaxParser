@@ -1,6 +1,7 @@
 #include "stdio.h"
 #include "boolean.h"
 #include "string.h"
+#include "assert.h"
 
 #ifndef MESINTOKEN_H
 #define MESINTOKEN_H
@@ -12,12 +13,25 @@ typedef struct {
 	int line;
 } Token;
 
+typedef struct {
+	FILE *f;
+	int idx;
+	int linecount;
+	Token CToken; // current token
+	Token NToken; // next token 
+} TokenMachineState;
+
+#define mtoken_CToken(M)\
+	(M).CToken
+#define mtoken_CSymbol(M)\
+	(M).CToken.symbol
+
 /*
 R Error
 B Begin
 E End
-I Input
-O Output
+I input
+O output
 D do
 W while
 H if
@@ -39,6 +53,13 @@ void assign_token_symbol( Token *t );
 
 void mtoken_init();
 
-void mtoken_adv( FILE *, int *fp, int *lc,Token *t);
+void mtoken_adv_bare( FILE *, int *fp, int *lc,Token *t);
+
+void mtoken_new( TokenMachineState *M, FILE* file );
+
+void mtoken_adv( TokenMachineState *M );
+
+boolean mtoken_terminated( TokenMachineState M );
+
 
 #endif
